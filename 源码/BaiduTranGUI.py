@@ -87,11 +87,15 @@ class Translate:
 
         result = requests.post(url, data=json_info).content
         # print(result0.url)
-        # print(result)
-        result = json.loads(result.decode())['trans_result']
-
-        self.result = result[0]['dst']
-        print('翻译结果： ', result)
+        print(result)
+        try:
+            result = json.loads(result.decode())['trans_result']
+            self.result = result[0]['dst']
+            print('翻译结果： ', result)
+        except Exception as e:
+            if json.loads(result.decode())['error_code'] == '58000':
+                self.result = json.loads(result.decode())['data']['client_ip'] + "未注册，请联系管理员！"
+            print(e)
 
     def getresult(self):
         return self.result
